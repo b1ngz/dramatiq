@@ -373,7 +373,8 @@ def worker_process(args, worker_id, logging_pipe, canteen):
     while running:
         time.sleep(1)
 
-    worker.stop()
+    timeout = int(os.getenv("dramatiq_worker_stop_timeout", '600000'))
+    worker.stop(timeout=timeout)
     broker.close()
     logging_pipe.close()
 
