@@ -1,20 +1,14 @@
 name: CI
-
-on:
-  push:
-  pull_request:
-  schedule:
-    - cron: "0 8 * * MON"
-
+on: [push, pull_request]
 jobs:
   lint:
     runs-on: ubuntu-18.04
     name: lint
     steps:
       - uses: actions/checkout@master
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v2
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - run: pip install tox
       - run: tox -e lint
 
@@ -23,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-18.04"]
-        python: ["3.5", "3.6", "3.7"]
+        python: ["3.5", "3.6", "3.7", "3.8", "3.9"]
 
     runs-on: ${{ matrix.os }}
     name: test on ${{ matrix.python }} (${{ matrix.os }})
@@ -48,11 +42,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
+      - run: sudo apt-get update -qq && sudo apt-get install -y libmemcached-dev
       - run: pip install -e '.[dev]'
-      - run: py.test --benchmark-skip
+      - run: pytest --benchmark-skip
         env:
           RABBITMQ_USERNAME: "dramatiq"
           RABBITMQ_PASSWORD: "dramatiq"
@@ -62,7 +57,7 @@ jobs:
     strategy:
       matrix:
         os: ["windows-2016"]
-        python: ["3.5", "3.6", "3.7"]
+        python: ["3.5", "3.6", "3.7", "3.8", "3.9"]
 
     runs-on: ${{ matrix.os }}
     name: test on ${{ matrix.python }} (${{ matrix.os }})
@@ -71,7 +66,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Install Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
 
@@ -88,7 +83,7 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           set INCLUDE=%cd%\..;%INCLUDE%
           msbuild libmemcached.vcxproj /p:UseEnv=true /p:Configuration=Release /t:Build;CopyFiles
-          cp Lib\memcached.dll ..\..\
+          cp Lib\memcached.dll %WINDIR%\system32
           pip install --install-option="--without-zlib" --install-option="--with-libmemcached=%cd%" pylibmc
         shell: cmd
         working-directory: libmemcached\win32
@@ -103,7 +98,7 @@ jobs:
       - name: Install RabbitMQ and Redis
         run: |
           choco install rabbitmq
-          choco install redis-64
+          choco install redis-64 --version 3.0.503
           redis-server --service-install
           redis-server --service-start
           redis-cli config set appendonly no
@@ -114,4 +109,4 @@ jobs:
         run: pip install -e '.[dev]'
 
       - name: Run tests
-        run: py.test --benchmark-skip
+        run: pytest --benchmark-skip

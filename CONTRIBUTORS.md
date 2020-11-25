@@ -42,3 +42,8 @@ of those changes to CLEARTYPE SRL.
 | [@benekastah](https://github.com/benekastah)          | Paul Harper            |
 | [@timdrijvers](https://github.com/timdrijvers)        | Tim Drijvers           |
 | [@takhs91](https://github.com/takhs91)                | Takis Panagopoulos     |
+| [@swidoff](https://github.com/swidoff)                | Seth Widoff            |
+| [@CaselIT](https://github.com/CaselIT)                | Federico Caselli       |
+| [@omegacoleman](https://github.com/omegacoleman)      | You Cai                |
+| [@denhai](https://github.com/denhai)                  | Hayden Bartlett        |
+| [@rouge8](https://github.com/rouge8)                  | Andy Freeland          |

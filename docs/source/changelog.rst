@@ -12,15 +12,72 @@ All notable changes to this project will be documented in this file.
 Added
 ^^^^^
 
+* The RabbitMQ broker dead message TTL can now be configured via the
+  ``dramatiq_dead_message_ttl`` environment variable.  (`#354`_,
+  `@evstratbg`_)
+* The CLI now supports referencing a callable to set up the broker on
+  worker startup.  (`#350`_)
+* The ``--worker-shutdown-timeout`` flag.  (`#330`_, `@mic47`_)
+
+.. _#330: https://github.com/Bogdanp/dramatiq/pull/330
+.. _#350: https://github.com/Bogdanp/dramatiq/pull/350
+.. _#354: https://github.com/Bogdanp/dramatiq/pull/354
+.. _@evstratbg: https://github.com/evstratbg
+.. _@mic47: https://github.com/mic47
+
+
+Changed
+^^^^^^^
+
+* The CLI raises an error when the ``--watch`` flag is set on
+  unsupported platforms. (`#326`_, `#328`_, `@CaselIT`_)
+
+Fixed
+^^^^^
+
+* The CLI now return code ``1`` when one of the workers is killed by
+  an unhandled signal.  (`#334`_, `@omegacoleman`_)
+* The results middleware now gracefully handles actor-not-found errors
+  during nack. (`#336`_, `#337`_, `@AndreCimander`_)
+* A memory bloat issue with tasks that raise exceptions.  (`#351`_)
+
+.. _#326: https://github.com/Bogdanp/dramatiq/pull/326
+.. _#328: https://github.com/Bogdanp/dramatiq/pull/328
+.. _#334: https://github.com/Bogdanp/dramatiq/pull/334
+.. _#336: https://github.com/Bogdanp/dramatiq/pull/336
+.. _#337: https://github.com/Bogdanp/dramatiq/pull/337
+.. _#351: https://github.com/Bogdanp/dramatiq/pull/351
+.. _@AndreCimander: https://github.com/AndreCimander
+.. _@CaselIT: https://github.com/CaselIT
+.. _@omegacoleman: https://github.com/omegacoleman
+
+
+`1.9.0`_ -- 2020-06-08
+----------------------
+
+Added
+^^^^^
+
 * A custom Redis connection can now be passed to the Redis broker via
   the new ``client`` keyword argument.  (`#274`_, `@davidt99`_)
+* Message priority can now be changed in ``before_enqueue`` hooks.
+  (`#313`_, `@thomazthz`_)
 * Support for storing actor exceptions.  (`#156`_)
 * Support for silent :class:`Retries<dramatiq.Retry>`.  (`#295`_)
+* Support for expected exceptions via the ``throws`` actor option.
+  (`#303`_, `@takhs91`_)
+* Support for changing the consumer class in the RabbitMQ and Redis
+  brokers.  (`#316`_, `@AndreCimander`_)
 
 .. _#156: https://github.com/Bogdanp/dramatiq/issues/156
 .. _#274: https://github.com/Bogdanp/dramatiq/issues/274
 .. _#295: https://github.com/Bogdanp/dramatiq/issues/295
+.. _#303: https://github.com/Bogdanp/dramatiq/issues/303
+.. _#313: https://github.com/Bogdanp/dramatiq/issues/313
+.. _#316: https://github.com/Bogdanp/dramatiq/issues/316
+.. _@AndreCimander: https://github.com/AndreCimander
 .. _@davidt99: https://github.com/davidt99
+.. _@thomazthz: https://github.com/thomazthz
 
 Changed
 ^^^^^^^
@@ -36,12 +93,15 @@ Fixed
 
 * A race condition during command line startup where the wrong exit
   codes could be returned when subprocesses failed.  (`#286`_)
+* A race condition between worker processes and fork processes during
+  boot. (`#297`_)
 * A logging race condition on Linux.  (`#171`_, `#286`_)
 * ``fileno`` has been added to ``StreamablePipe``.  (`#291`_, `@takhs91`_)
 
 .. _#171: https://github.com/Bogdanp/dramatiq/issues/286
 .. _#286: https://github.com/Bogdanp/dramatiq/issues/286
 .. _#291: https://github.com/Bogdanp/dramatiq/pull/291
+.. _#297: https://github.com/Bogdanp/dramatiq/pull/297
 .. _@takhs91: https://github.com/takhs91
 
 
@@ -848,7 +908,8 @@ Changed
 * Capped prefetch counts to 65k.
 
 
-.. _Unreleased: https://github.com/Bogdanp/dramatiq/compare/v1.8.1...HEAD
+.. _Unreleased: https://github.com/Bogdanp/dramatiq/compare/v1.9.0...HEAD
+.. _1.9.0: https://github.com/Bogdanp/dramatiq/compare/v1.8.1...v1.9.0
 .. _1.8.1: https://github.com/Bogdanp/dramatiq/compare/v1.8.0...v1.8.1
 .. _1.8.0: https://github.com/Bogdanp/dramatiq/compare/v1.7.0...v1.8.0
 .. _1.7.0: https://github.com/Bogdanp/dramatiq/compare/v1.6.1...v1.7.0

@@ -5,17 +5,26 @@
 [![Build Status](https://github.com/Bogdanp/dramatiq/workflows/CI/badge.svg)](https://github.com/Bogdanp/dramatiq/actions?query=workflow%3A%22CI%22)
 [![PyPI version](https://badge.fury.io/py/dramatiq.svg)](https://badge.fury.io/py/dramatiq)
 [![Documentation](https://img.shields.io/badge/doc-latest-brightgreen.svg)](http://dramatiq.io)
-[![Discourse](https://img.shields.io/badge/discuss-online-orange.svg)](https://reddit.com/r/dramatiq)
+[![Discuss](https://img.shields.io/badge/discuss-online-orange.svg)](https://groups.io/g/dramatiq-users)
 
 *A fast and reliable distributed task processing library for Python 3.*
 
 <hr/>
 
 **Changelog**: https://dramatiq.io/changelog.html <br/>
-**Community**: https://reddit.com/r/dramatiq <br/>
+**Community**: https://groups.io/g/dramatiq-users <br/>
 **Documentation**: https://dramatiq.io <br/>
 
 <hr/>
+
+<h3 align="center">Sponsors</h3>
+
+<p align="center">
+  <a href="https://www.sendcloud.com/?utm_source=dramatiq.io&utm_medium=Banner&utm_campaign=Sponsored%20Banner&utm_content=V1" target="_blank">
+    <img width="222px" src="docs/source/_static/sendcloud-logo.png">
+  </a>
+</p>
+
 
 ## Installation
 

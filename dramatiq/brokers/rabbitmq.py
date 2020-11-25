@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import os
 import time
 import warnings
 from functools import partial
@@ -31,7 +32,7 @@ from ..logging import get_logger
 from ..message import Message
 
 #: The maximum amount of time a message can be in the dead queue.
-DEAD_MESSAGE_TTL = 86400000 * 7
+DEAD_MESSAGE_TTL = int(os.getenv("dramatiq_dead_message_ttl", 86400000 * 7))
 
 #: The max number of times to attempt an enqueue operation in case of
 #: a connection error.
@@ -109,6 +110,10 @@ class RabbitmqBroker(Broker):
         self.queues = set()
         self.queues_pending = set()
         self.state = local()
+
+    @property
+    def consumer_class(self):
+        return _RabbitmqConsumer
 
     @property
     def connection(self):
@@ -189,7 +194,7 @@ class RabbitmqBroker(Broker):
           Consumer: A consumer that retrieves messages from RabbitMQ.
         """
         self.declare_queue(queue_name, ensure=True)
-        return _RabbitmqConsumer(self.parameters, queue_name, prefetch, timeout)
+        return self.consumer_class(self.parameters, queue_name, prefetch, timeout)
 
     def declare_queue(self, queue_name, *, ensure=False):
         """Declare a queue.  Has no effect if a queue with the given
@@ -284,11 +289,6 @@ class RabbitmqBroker(Broker):
         queue_name = message.queue_name
         self.declare_queue(queue_name, ensure=True)
 
-        properties = pika.BasicProperties(
-            delivery_mode=2,
-            priority=message.options.get("broker_priority"),
-        )
-
         if delay is not None:
             queue_name = dq_name(queue_name)
             message_eta = current_millis() + delay
@@ -308,7 +308,10 @@ class RabbitmqBroker(Broker):
                     exchange="",
                     routing_key=queue_name,
                     body=message.encode(),
-                    properties=properties,
+                    properties=pika.BasicProperties(
+                        delivery_mode=2,
+                        priority=message.options.get("broker_priority"),
+                    ),
                 )
                 self.emit_after("enqueue", message, delay)
                 return message

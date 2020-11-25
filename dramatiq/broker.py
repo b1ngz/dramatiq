@@ -1,6 +1,6 @@
 # This file is a part of Dramatiq.
 #
-# Copyright (C) 2017,2018 CLEARTYPE SRL <bogdan@cleartype.io>
+# Copyright (C) 2017,2018,2019,2020 CLEARTYPE SRL <bogdan@cleartype.io>
 #
 # Dramatiq is free software; you can redistribute it and/or modify it
 # under the terms of the GNU Lesser General Public License as published by
@@ -325,6 +325,11 @@ class MessageProxy:
         """Stuff an exception into this message.
         """
         self._exception = exception
+
+    def clear_exception(self):
+        """Remove the exception from this message.
+        """
+        del self._exception
 
     def fail(self):
         """Mark this message for rejection.

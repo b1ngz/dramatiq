@@ -1,6 +1,6 @@
 # This file is a part of Dramatiq.
 #
-# Copyright (C) 2017,2018,2019 CLEARTYPE SRL <bogdan@cleartype.io>
+# Copyright (C) 2017,2018,2019,2020 CLEARTYPE SRL <bogdan@cleartype.io>
 #
 # Dramatiq is free software; you can redistribute it and/or modify it
 # under the terms of the GNU Lesser General Public License as published by
@@ -192,6 +192,14 @@ class _StubConsumer(Consumer):
         try:
             data = self.queue.get(timeout=self.timeout / 1000)
             message = Message.decode(data)
-            return MessageProxy(message)
+            return _StubMessageProxy(message)
         except Empty:
             return None
+
+
+class _StubMessageProxy(MessageProxy):
+    def clear_exception(self):
+        """Let the GC handle the cycle once the message is no longer
+        in use.  This lets us keep showing full stack traces in
+        failing tests.  See comment in `Worker' for details.
+        """
